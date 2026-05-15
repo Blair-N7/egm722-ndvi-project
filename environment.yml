@@ -1,0 +1,10 @@
+name: egm722-ndvi-project
+channels:
+  -conda-forge
+  -defaults
+dependencies:
+  - python
+  - rasterio
+  - numpy
+  - matplotlib
+  - pandas
