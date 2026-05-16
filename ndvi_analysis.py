@@ -4,10 +4,14 @@ import rasterio as rio
 import matplotlib.pyplot as plt
 
 # File path to the Landsat 5 TM raster used for this project
-raster_path = r"C:\egm722_projects\egm722\Week4\data_files\NI_Mosaic.tif" # r mode used to ensure file path behaves
+raster_path = r"C:\egm722_projects\egm722\Week4\data_files\NI_Mosaic.tif"
+
+# Ignore divide by zero errors caused by invalid raster pixels
+np.seterr(divide='ignore', invalid='ignore')
 
 # Open the raster using with statement
 with rio.open(raster_path) as dataset:
+    # read red and near infrared bands
     red = dataset.read(3) # Landsat 5 TM Band 3 = red
     nir = dataset.read(4) # Landsat 5 TM Band 4 = near infrared
 
@@ -20,21 +24,28 @@ with rio.open(raster_path) as dataset:
     print(f"Red band shape: {red.shape}")
     print(f"NIR band shape: {nir.shape}")
 
-# Ignore divide by zero errors caused by invalid raster pixels
-np.seterr(divide='ignore', invalid='ignore')
+    # Convert arrays to floating point numbers
+    red = red.astype('float32')
+    nir = nir.astype('float32')
 
-# Convert arrays to floating point numbers
-red = red.astype('float32')
-nir = nir.astype('float32')
+    # ndvi calculation
+    ndvi = (nir - red) / (nir + red)
 
-# ndvi calculation defined according to the formula
-ndvi = (nir - red) / (nir + red)
+    # Copy metadata from the original raster
+    ndvi_meta = dataset.meta.copy()
 
-# NumPy nanmin, nanmax and nanmean function used to ignore NaN values
+    # Update metadata for output NDVI raster
+    ndvi_meta.update({"count": 1, "dtype": "float32"})
+
+    # Save output as GeoTIFF file
+    with rio.open("outputs/ndvi_output.tif", "w", **ndvi_meta) as dst:
+
+# NumPy nanmin, nanmax and nanmean function used to ignore NaN values for NDVI calculations
 print(f"NDVI minimum value: {np.nanmin(ndvi)}") # show the NDVI minimum value
 print(f"NDVI maximum value: {np.nanmax(ndvi)}") # show the NDVI maximum value
 print(f"NDVI mean: {np.nanmean(ndvi)}") # show the NDVI mean value
 
+# Visualize the results
 plt.figure(figsize=(10, 8))
 plt.imshow(ndvi, cmap="RdYlGn", vmin=-1, vmax=1)
 plt.colorbar(label='NDVI')
