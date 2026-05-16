@@ -1,11 +1,15 @@
 # Import the modules required for this project
 import numpy as np
+import rasterio
 import rasterio as rio
 import matplotlib.pyplot as plt
 
 # NDVI Function
 def calculate_ndvi(red, nir):
     """Calculate NDVI from Red and NIR raster bands"""
+
+    # Ignore divide by zero errors caused by invalid raster pixels
+    np.seterr(divide='ignore', invalid='ignore')
 
     # Convert arrays to floating point numbers
     red = red.astype('float32')
@@ -48,7 +52,7 @@ def print_ndvi_stats(ndvi):
     print(f"NDVI maximum value: {np.nanmax(ndvi)}")  # show the NDVI maximum value
     print(f"NDVI mean: {np.nanmean(ndvi)}")  # show the NDVI mean value
 
-# Results visualization function
+# NDVI Results visualization function
 def plot_ndvi(ndvi):
     """Display the results of the NDVI calculations"""
 
@@ -59,11 +63,22 @@ def plot_ndvi(ndvi):
     plt.title("NDVI calculated from Landsat 5 TM Imagery")
     plt.show()
 
+# Export as raster function
+def export_raster(ndvi, dataset, output_path):
+    """Export output raster as GeoTIFF file"""
+
+    # Copy metadata from the original raster
+    ndvi_meta=dataset.meta.copy()
+
+    # Update metadata for output NDVI raster
+    ndvi_meta.update({"count": 1, "dtype": "float32"})
+
+    # Save output as GeoTIFF file
+    with rio.open("outputs/ndvi_output.tif", "w", **ndvi_meta) as dst:
+        dst.write(ndvi.astype("float32"), 1)
+
 # File path to the Landsat 5 TM raster used for this project
 raster_path = r"C:\egm722_projects\egm722\Week4\data_files\NI_Mosaic.tif"
-
-# Ignore divide by zero errors caused by invalid raster pixels
-np.seterr(divide='ignore', invalid='ignore')
 
 # Open the raster using with statement
 with rio.open(raster_path) as dataset:
@@ -84,11 +99,8 @@ with rio.open(raster_path) as dataset:
     # NDVI statistics function call
     print_ndvi_stats(ndvi)
 
-    # Copy metadata from the original raster
-    ndvi_meta = dataset.meta.copy()
+    # Plot NDVI function call
+    plot_ndvi(ndvi)
 
-    # Update metadata for output NDVI raster
-    ndvi_meta.update({"count": 1, "dtype": "float32"})
-
-    # Save output as GeoTIFF file
-    with rio.open("outputs/ndvi_output.tif", "w", **ndvi_meta) as dst:
+    # Export raster function call
+    export_raster(ndvi, dataset,"outputs/ndvi_output.tif")
