@@ -30,7 +30,15 @@ nir = nir.astype('float32')
 # ndvi calculation defined according to the formula
 ndvi = (nir - red) / (nir + red)
 
-print(f"NDVI minimum value: {np.nanmin(ndvi)}")
-print(f"NDVI maximum value: {np.nanmax(ndvi)}")
-print(f"NDVI mean: {np.nanmean(ndvi)}")
+# NumPy nanmin, nanmax and nanmean function used to ignore NaN values
+print(f"NDVI minimum value: {np.nanmin(ndvi)}") # show the NDVI minimum value
+print(f"NDVI maximum value: {np.nanmax(ndvi)}") # show the NDVI maximum value
+print(f"NDVI mean: {np.nanmean(ndvi)}") # show the NDVI mean value
+
+plt.figure(figsize=(10, 8))
+plt.imshow(ndvi, cmap="RdYlGn", vmin=-1, vmax=1)
+plt.colorbar(label='NDVI')
+plt.title("NDVI calculated from Landsat 5 TM Imagery")
+plt.show()
+
 
