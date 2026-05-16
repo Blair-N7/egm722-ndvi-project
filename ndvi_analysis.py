@@ -11,8 +11,26 @@ with rio.open(raster_path) as dataset:
     red = dataset.read(3) # Landsat 5 TM Band 3 = red
     nir = dataset.read(4) # Landsat 5 TM Band 4 = near infrared
 
+ # Display the metadata and georeferencing information for the raster
     print(f"{dataset.name} opened in {dataset.mode} mode")
     print(f"Image has {dataset.count} bands")
     print(f"Raster size: {dataset.width} x {dataset.height}")
+    print(f"Raster CRS: {dataset.crs}")
+    print(f"Raster bounds: {dataset.bounds}")
     print(f"Red band shape: {red.shape}")
     print(f"NIR band shape: {nir.shape}")
+
+# Ignore divide by zero errors caused by invalid raster pixels
+np.seterr(divide='ignore', invalid='ignore')
+
+# Convert arrays to floating point numbers
+red = red.astype('float32')
+nir = nir.astype('float32')
+
+# ndvi calculation defined according to the formula
+ndvi = (nir - red) / (nir + red)
+
+print(f"NDVI minimum value: {np.nanmin(ndvi)}")
+print(f"NDVI maximum value: {np.nanmax(ndvi)}")
+print(f"NDVI mean: {np.nanmean(ndvi)}")
+
