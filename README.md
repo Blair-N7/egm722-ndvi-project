@@ -41,7 +41,7 @@ Installation instructions:
 	6. In the 'Import Environment' window that opens, tick Local drive and browse to the directory of the extracted ZIP file of the repository, click 'environment.yml', then click 'Import'.
 	7. Navigate to the folder of the extracted ZIP file, right click and open 'ndvi_analysis' with PyCharm.
 	8. If prompted, select 'Conda' as the Python interpreter created from 'environment.yml', this can also be done via PyCharm settings
-	9. With ndvi_analysis open in the prloject panel, click the green run button to execute the script.
+	9. With ndvi_analysis open in the project panel, click the green run button to execute the script.
 
 ## Repository Link
 URL: https://github.com/Blair-N7/egm722-ndvi-project
