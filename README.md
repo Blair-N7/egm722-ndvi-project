@@ -5,7 +5,6 @@ This repository contains a Python workflow for calculating Normalized Difference
 
 ## Outputs
 The script produces:
-
 	- an NDVI visualisation using matplotlib
 	- a GeoTIFF raster file called 'ndvi_output.tif'
 The GeoTIFF raster is saved in the 'outputs' folder of the project directory.
@@ -21,18 +20,15 @@ For this script to work with other multispectral raster datasets, the band numbe
 
 ## Installation/Setup
 Pre-requisite software requirements:
-
 	- Python 3.x
 	- Anaconda
 	- Git
 	- PyCharm
 Required python modules (dependencies):
-
 	- rasterio
 	- NumPy
 	- matplotlib
 Installation instructions:
-
 	1. Navigate to the repository page: 'https://github.com/Blair-N7/egm722-ndvi-project'.
 	2. Click the green 'Code' button.
 	3. Select 'Download Zip'.
