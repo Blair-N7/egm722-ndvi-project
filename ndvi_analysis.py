@@ -1,6 +1,5 @@
 # Import the modules required for this project
 import numpy as np
-import rasterio
 import rasterio as rio
 import matplotlib.pyplot as plt
 
@@ -74,11 +73,11 @@ def export_raster(ndvi, dataset, output_path):
     ndvi_meta.update({"count": 1, "dtype": "float32"})
 
     # Save output as GeoTIFF file
-    with rio.open("outputs/ndvi_output.tif", "w", **ndvi_meta) as dst:
+    with rio.open(output_path, "w", **ndvi_meta) as dst:
         dst.write(ndvi.astype("float32"), 1)
 
 # File path to the Landsat 5 TM raster used for this project
-raster_path = r"C:\egm722_projects\egm722\Week4\data_files\NI_Mosaic.tif"
+raster_path = r"data/NI_Mosaic.tif"
 
 # Open the raster using with statement
 with rio.open(raster_path) as dataset:
